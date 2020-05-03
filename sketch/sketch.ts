@@ -4,14 +4,10 @@ function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
 
-function keyPressed() {
-  return false; // prevent default
-}
-
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  rectMode(CENTER);
   bird = new Bird();
+  rectMode(CENTER);
 }
 
 function draw() {
@@ -25,7 +21,7 @@ function draw() {
     bird.move(createVector(5, 0));
   }
   if (keyIsDown(DOWN_ARROW)) {
-    bird.move(createVector(5, 0));
+    bird.move(createVector(-5, 0));
   }
 
   background(0);
