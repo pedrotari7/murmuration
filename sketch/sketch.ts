@@ -16,31 +16,7 @@ function setup() {
 function draw() {
   background(0);
   for (const bird of birds) {
-    if (keyIsDown(LEFT_ARROW)) {
-      bird.rotate(-PI / 40);
-    }
-    if (keyIsDown(RIGHT_ARROW)) {
-      bird.rotate(PI / 40);
-    }
-    if (keyIsDown(UP_ARROW)) {
-      bird.move(
-        createVector(5, 0),
-        birds.filter(
-          (b) =>
-            b.position.x != bird.position.x && b.position.y != bird.position.y
-        )
-      );
-    }
-    if (keyIsDown(DOWN_ARROW)) {
-      bird.move(
-        createVector(-5, 0),
-        birds.filter(
-          (b) =>
-            b.position.x != bird.position.x && b.position.y != bird.position.y
-        )
-      );
-    }
-
+    bird.update();
     bird.draw();
     fill(255, 0, 0);
     fill(255);

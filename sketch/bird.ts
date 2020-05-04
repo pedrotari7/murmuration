@@ -14,39 +14,27 @@ const rotateAroundPoint = (
 
 class Bird {
   private size = createVector(15, 10);
-  private angle = 0;
   private color = color(255);
-  public position = createVector(random(width), random(height));
+  public mass = 1;
+  public pos = createVector(random(width), random(height));
+  public vel = createVector(random(-5, 5), random(-5, 5));
+  public acc = createVector(0, 0);
 
   constructor() {}
 
-  getVertices(): p5.Vector[] {
-    const { x, y } = this.position;
+  update() {
+    this.pos.add(this.vel);
+    this.vel.add(this.acc);
+    this.acc.set(0, 0);
 
-    const p1 = rotateAroundPoint(
-      createVector(x + this.size.x, y),
-      this.position,
-      this.angle
-    );
-    const p2 = rotateAroundPoint(
-      createVector(x - this.size.x / 2, y + this.size.y),
-      this.position,
-      this.angle
-    );
-    const p3 = rotateAroundPoint(
-      createVector(x - this.size.x / 2, y - this.size.y),
-      this.position,
-      this.angle
-    );
-
-    return [p1, p2, p3];
+    this.boundPosition();
   }
 
   draw() {
     push();
-    translate(this.position.x, this.position.y);
+    translate(this.pos.x, this.pos.y);
 
-    rotate(this.angle);
+    rotate(this.vel.heading());
     triangle(
       this.size.x,
       0,
@@ -58,22 +46,22 @@ class Bird {
 
     pop();
 
-    const { x, y } = this.position;
+    const { x, y } = this.pos;
 
     const p1 = rotateAroundPoint(
       createVector(x + this.size.x, y),
-      this.position,
-      this.angle
+      this.pos,
+      this.vel.heading()
     );
     const p2 = rotateAroundPoint(
       createVector(x - this.size.x / 2, y + this.size.y),
-      this.position,
-      this.angle
+      this.pos,
+      this.vel.heading()
     );
     const p3 = rotateAroundPoint(
       createVector(x - this.size.x / 2, y - this.size.y),
-      this.position,
-      this.angle
+      this.pos,
+      this.vel.heading()
     );
 
     fill(255, 10, 10);
@@ -85,35 +73,14 @@ class Bird {
     fill(this.color);
   }
 
-  rotate(angle: number) {
-    this.angle += angle;
-  }
-
-  move(dir: p5.Vector, obstacles: Bird[]) {
-    const { x, y } = this.position;
-
-    dir.rotate(this.angle);
-
-    const p1 = rotateAroundPoint(
-      createVector(x + this.size.x, y),
-      this.position,
-      this.angle
-    ).add(dir);
-    const p2 = rotateAroundPoint(
-      createVector(x - this.size.x / 2, y + this.size.y),
-      this.position,
-      this.angle
-    ).add(dir);
-    const p3 = rotateAroundPoint(
-      createVector(x - this.size.x / 2, y - this.size.y),
-      this.position,
-      this.angle
-    ).add(dir);
-
-    this.color = color(255);
-
-    if (isInside(p1) && isInside(p2) && isInside(p3)) {
-      this.position.add(dir);
+  boundPosition() {
+    if (
+      this.pos.x < 0 ||
+      this.pos.x > width ||
+      this.pos.y < 0 ||
+      this.pos.y > height
+    ) {
+      this.vel.rotate(PI);
     }
   }
 }
