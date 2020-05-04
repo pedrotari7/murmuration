@@ -2,9 +2,9 @@ let m1Slider: p5.Element;
 let m2Slider: p5.Element;
 let m3Slider: p5.Element;
 
-let m1: number = 1;
+let m1: number = 0.1;
 let m2: number = 1;
-let m3: number = 1;
+let m3: number = 0.7;
 
 const birds: Bird[] = [];
 
@@ -13,15 +13,15 @@ function windowResized() {
 }
 
 function setup() {
-  m1Slider = createSlider(-1, 20, 1);
+  m1Slider = createSlider(-1, 2, m1, 0.1);
   m1Slider.position(30, 10);
-  m2Slider = createSlider(-1, 20, 1);
+  m2Slider = createSlider(-1, 2, m2, 0.1);
   m2Slider.position(30, 30);
-  m3Slider = createSlider(-1, 20, 1);
+  m3Slider = createSlider(-1, 2, m3, 0.1);
   m3Slider.position(30, 50);
   createCanvas(windowWidth, windowHeight);
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 600; i++) {
     birds.push(new Bird(i));
   }
   rectMode(CENTER);

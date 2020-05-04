@@ -22,11 +22,7 @@ var Bird = (function () {
         this.limitVelocity();
     };
     Bird.prototype.draw = function () {
-        push();
-        translate(this.pos.x, this.pos.y);
-        rotate(this.vel.heading());
-        triangle(this.size.x, 0, -this.size.x / 2, this.size.y, -this.size.x / 2, -this.size.y);
-        pop();
+        circle(this.pos.x, this.pos.y, 7);
         fill(this.color);
     };
     Bird.prototype.boundPosition = function () {
@@ -64,7 +60,7 @@ var Bird = (function () {
             var bird = flock_2[_i];
             if (bird.id !== this.id) {
                 var diff = p5.Vector.sub(bird.pos, this.pos);
-                if (diff.mag() < 50) {
+                if (diff.mag() < 20) {
                     c.sub(diff);
                 }
             }
@@ -89,22 +85,22 @@ var Bird = (function () {
 var m1Slider;
 var m2Slider;
 var m3Slider;
-var m1 = 1;
+var m1 = 0.1;
 var m2 = 1;
-var m3 = 1;
+var m3 = 0.7;
 var birds = [];
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 function setup() {
-    m1Slider = createSlider(-1, 20, 1);
+    m1Slider = createSlider(-1, 2, m1, 0.1);
     m1Slider.position(30, 10);
-    m2Slider = createSlider(-1, 20, 1);
+    m2Slider = createSlider(-1, 2, m2, 0.1);
     m2Slider.position(30, 30);
-    m3Slider = createSlider(-1, 20, 1);
+    m3Slider = createSlider(-1, 2, m3, 0.1);
     m3Slider.position(30, 50);
     createCanvas(windowWidth, windowHeight);
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 600; i++) {
         birds.push(new Bird(i));
     }
     rectMode(CENTER);

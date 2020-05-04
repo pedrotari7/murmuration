@@ -35,20 +35,21 @@ class Bird {
   }
 
   draw() {
-    push();
-    translate(this.pos.x, this.pos.y);
+    // push();
+    // translate(this.pos.x, this.pos.y);
 
-    rotate(this.vel.heading());
-    triangle(
-      this.size.x,
-      0,
-      -this.size.x / 2,
-      this.size.y,
-      -this.size.x / 2,
-      -this.size.y
-    );
+    // rotate(this.vel.heading());
+    // triangle(
+    //   this.size.x,
+    //   0,
+    //   -this.size.x / 2,
+    //   this.size.y,
+    //   -this.size.x / 2,
+    //   -this.size.y
+    // );
 
-    pop();
+    // pop();
+    circle(this.pos.x, this.pos.y, 7);
 
     // const { x, y } = this.pos;
 
@@ -118,7 +119,7 @@ class Bird {
     for (const bird of flock) {
       if (bird.id !== this.id) {
         const diff = p5.Vector.sub(bird.pos, this.pos);
-        if (diff.mag() < 50) {
+        if (diff.mag() < 20) {
           c.sub(diff);
         }
       }
