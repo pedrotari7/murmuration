@@ -6,41 +6,32 @@ var rotateAroundPoint = function (p, c, angle) {
 };
 var Bird = (function () {
     function Bird(id) {
-        this.size = createVector(15, 10);
-        this.color = color(255);
         this.mass = 1;
         this.pos = createVector(random(0, width), random(0, height));
         this.vel = createVector(random(-2, 2), random(-2, 2));
         this.acc = createVector(0, 0);
         this.id = id;
+        this.color = lerpColor(color(255, 0, 0), color(255, 255, 0), this.id / 600);
     }
-    Bird.prototype.update = function () {
+    Bird.prototype.update = function (vLim) {
         this.pos.add(this.vel);
         this.vel.add(this.acc);
         this.acc.set(0, 0);
         this.boundPosition();
-        this.limitVelocity();
+        this.vel.limit(vLim);
     };
     Bird.prototype.draw = function () {
-        circle(this.pos.x, this.pos.y, 7);
         fill(this.color);
+        circle(this.pos.x, this.pos.y, 7);
+        fill(255);
     };
     Bird.prototype.boundPosition = function () {
-        if (this.pos.x < 0) {
-            this.vel.x = 10;
+        if (this.pos.x < 100 ||
+            this.pos.x > width - 100 ||
+            this.pos.y < 100 ||
+            this.pos.y > height - 100) {
+            this.vel.rotate(PI / 50);
         }
-        else if (this.pos.x > width) {
-            this.vel.x = -10;
-        }
-        if (this.pos.y < 0) {
-            this.vel.y = 10;
-        }
-        else if (this.pos.y > height) {
-            this.vel.y = -10;
-        }
-    };
-    Bird.prototype.limitVelocity = function () {
-        this.vel.limit(5);
     };
     Bird.prototype.rule1 = function (flock, m1) {
         var pc = createVector(0, 0);
@@ -85,20 +76,24 @@ var Bird = (function () {
 var m1Slider;
 var m2Slider;
 var m3Slider;
+var vLimSlider;
 var m1 = 0.1;
 var m2 = 1;
 var m3 = 0.7;
+var vLim = 20;
 var birds = [];
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 function setup() {
     m1Slider = createSlider(-1, 2, m1, 0.1);
-    m1Slider.position(30, 10);
+    m1Slider.position(32, 10);
     m2Slider = createSlider(-1, 2, m2, 0.1);
-    m2Slider.position(30, 30);
+    m2Slider.position(32, 30);
     m3Slider = createSlider(-1, 2, m3, 0.1);
-    m3Slider.position(30, 50);
+    m3Slider.position(32, 50);
+    vLimSlider = createSlider(0, 150, vLim, 1);
+    vLimSlider.position(32, 70);
     createCanvas(windowWidth, windowHeight);
     for (var i = 0; i < 600; i++) {
         birds.push(new Bird(i));
@@ -109,19 +104,22 @@ function draw() {
     m1 = m1Slider.value();
     m2 = m2Slider.value();
     m3 = m3Slider.value();
+    vLim = vLimSlider.value();
     background(0);
-    text("m1", 15, 22);
-    text("m2", 15, 42);
-    text("m3", 15, 62);
+    text("m1", 8, 22);
+    text("m2", 8, 42);
+    text("m3", 8, 62);
+    text("vlim", 8, 82);
     text(m1, 170, 22);
     text(m2, 170, 42);
     text(m3, 170, 62);
+    text(vLim, 170, 82);
     for (var _i = 0, birds_1 = birds; _i < birds_1.length; _i++) {
         var bird = birds_1[_i];
         bird.rule1(birds, m1);
         bird.rule2(birds, m2);
         bird.rule3(birds, m3);
-        bird.update();
+        bird.update(vLim);
         fill(255, 0, 0);
         fill(255);
         bird.draw();

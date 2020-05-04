@@ -14,88 +14,41 @@ const rotateAroundPoint = (
 
 class Bird {
   private id: number;
-  private size = createVector(15, 10);
-  private color = color(255);
   public mass = 1;
+  private color: p5.Color;
   public pos = createVector(random(0, width), random(0, height));
   public vel = createVector(random(-2, 2), random(-2, 2));
   public acc = createVector(0, 0);
 
   constructor(id: number) {
     this.id = id;
+    this.color = lerpColor(color(255, 0, 0), color(255, 255, 0), this.id / 600);
   }
 
-  update() {
+  update(vLim: number) {
     this.pos.add(this.vel);
     this.vel.add(this.acc);
     this.acc.set(0, 0);
 
     this.boundPosition();
-    this.limitVelocity();
+    this.vel.limit(vLim);
   }
 
   draw() {
-    // push();
-    // translate(this.pos.x, this.pos.y);
-
-    // rotate(this.vel.heading());
-    // triangle(
-    //   this.size.x,
-    //   0,
-    //   -this.size.x / 2,
-    //   this.size.y,
-    //   -this.size.x / 2,
-    //   -this.size.y
-    // );
-
-    // pop();
-    circle(this.pos.x, this.pos.y, 7);
-
-    // const { x, y } = this.pos;
-
-    // const p1 = rotateAroundPoint(
-    //   createVector(x + this.size.x, y),
-    //   this.pos,
-    //   this.vel.heading()
-    // );
-    // const p2 = rotateAroundPoint(
-    //   createVector(x - this.size.x / 2, y + this.size.y),
-    //   this.pos,
-    //   this.vel.heading()
-    // );
-    // const p3 = rotateAroundPoint(
-    //   createVector(x - this.size.x / 2, y - this.size.y),
-    //   this.pos,
-    //   this.vel.heading()
-    // );
-
-    // fill(255, 10, 10);
-    // circle(p1.x, p1.y, 5);
-    // fill(10, 255, 10);
-    // circle(p2.x, p2.y, 5);
-    // fill(10, 10, 255);
-    // circle(p3.x, p3.y, 5);
-    // fill(255, 0, 0);
-    // textAlign(CENTER);
-    // text(this.id, this.pos.x, this.pos.y, 50, 50);
     fill(this.color);
+    circle(this.pos.x, this.pos.y, 7);
+    fill(255);
   }
 
   boundPosition() {
-    if (this.pos.x < 0) {
-      this.vel.x = 10;
-    } else if (this.pos.x > width) {
-      this.vel.x = -10;
+    if (
+      this.pos.x < 100 ||
+      this.pos.x > width - 100 ||
+      this.pos.y < 100 ||
+      this.pos.y > height - 100
+    ) {
+      this.vel.rotate(PI / 50);
     }
-    if (this.pos.y < 0) {
-      this.vel.y = 10;
-    } else if (this.pos.y > height) {
-      this.vel.y = -10;
-    }
-  }
-
-  limitVelocity() {
-    this.vel.limit(5);
   }
 
   rule1(flock: Bird[], m1: number) {
