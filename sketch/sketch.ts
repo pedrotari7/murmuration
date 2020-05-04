@@ -1,4 +1,4 @@
-let bird: Bird;
+const birds: Bird[] = [];
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
@@ -6,30 +6,43 @@ function windowResized() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  bird = new Bird();
+
+  for (let i = 0; i < 10; i++) {
+    birds.push(new Bird());
+  }
   rectMode(CENTER);
 }
 
 function draw() {
-  if (keyIsDown(LEFT_ARROW)) {
-    bird.rotate(-PI / 40);
-  }
-  if (keyIsDown(RIGHT_ARROW)) {
-    bird.rotate(PI / 40);
-  }
-  if (keyIsDown(UP_ARROW)) {
-    bird.move(createVector(5, 0));
-  }
-  if (keyIsDown(DOWN_ARROW)) {
-    bird.move(createVector(-5, 0));
-  }
-
   background(0);
+  for (const bird of birds) {
+    if (keyIsDown(LEFT_ARROW)) {
+      bird.rotate(-PI / 40);
+    }
+    if (keyIsDown(RIGHT_ARROW)) {
+      bird.rotate(PI / 40);
+    }
+    if (keyIsDown(UP_ARROW)) {
+      bird.move(
+        createVector(5, 0),
+        birds.filter(
+          (b) =>
+            b.position.x != bird.position.x && b.position.y != bird.position.y
+        )
+      );
+    }
+    if (keyIsDown(DOWN_ARROW)) {
+      bird.move(
+        createVector(-5, 0),
+        birds.filter(
+          (b) =>
+            b.position.x != bird.position.x && b.position.y != bird.position.y
+        )
+      );
+    }
 
-  bird.draw();
-
-  fill(255, 0, 0);
-
-  circle(bird.position.x, bird.position.y, 5);
-  fill(255);
+    bird.draw();
+    fill(255, 0, 0);
+    fill(255);
+  }
 }
